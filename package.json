@@ -9,9 +9,8 @@
   "author": "mtso",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
     "mkdirp": "^0.5.1",
-    "nightmare": "^2.7.0"
+    "nightmare": "^2.7.0",
+    "progress": "^1.1.8"
   }
 }
