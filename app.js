@@ -73,6 +73,7 @@ function getPieces(callback, url, selector) {
     });
 }
 
+
 function signin(callback, url, selector, credentials) {
   nightmare
     .goto(url)
@@ -85,6 +86,7 @@ function signin(callback, url, selector, credentials) {
       console.log(error);
     });
 }
+
 
 var isFirstCrawl = true;
 function crawl(callback, piece, selector) {
@@ -150,11 +152,10 @@ function crawl(callback, piece, selector) {
     });
 }
 
+
 function save(data) {
   var series_url = config.base_url + config.series_name;
-  console.log(series_url)
   var pieceName = data.url.replace(series_url, '').replace('/', '').replace('/', '');
-  console.log(pieceName);
   var dir = config.save_path + '/' + config.series_name + '.nmdata/' + data.rarity;
   var filename = pieceName + '.txt';
   var textToSave = 'Accessed on ' + data.timestamp + '\n' + data.text;
