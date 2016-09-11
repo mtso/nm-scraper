@@ -4,22 +4,13 @@ const Nightmare = require('nightmare');
 
 var nightmare = Nightmare();
 
+
 var credentials;
 fs.readFile('credentials.json', 'utf8', function(error, data) {
   if (error) { return console.log(error); }
-
   credentials = JSON.parse(data);
-  console.log(credentials);
-  // console.log(credentials.user);
-  // console.log(credentials.pass);
 })
 
-const config = {
-  series_name: 'lithium-flowers',
-  series_url: 'https://www.neonmob.com/series/lithium-flowers/',
-  login_url: 'https://www.neonmob.com/login',
-  save_path: '.'
-}
 
 const selector = {
   overlay: '#ng-nm-overlay',
@@ -160,7 +151,10 @@ function crawl(callback, piece, selector) {
 }
 
 function save(data) {
-  var pieceName = data.url.replace(config.series_url, '').replace('/', '');
+  var series_url = config.base_url + config.series_name;
+  console.log(series_url)
+  var pieceName = data.url.replace(series_url, '').replace('/', '').replace('/', '');
+  console.log(pieceName);
   var dir = config.save_path + '/' + config.series_name + '.nmdata/' + data.rarity;
   var filename = pieceName + '.txt';
   var textToSave = 'Accessed on ' + data.timestamp + '\n' + data.text;
@@ -180,21 +174,34 @@ function save(data) {
   }
 }
 
+
 var pieceIndex = 0;
 function nextPiece() {
   return pieces[pieceIndex++];
 }
 
+
 function beginCrawl() {
   crawl(save, nextPiece(), selector);
 }
 
+
 var pieces;
-getPieces(function(pieces_data) {
-  pieces = pieces_data;
+var config;
 
-  signin(function() {
-    crawl(save, nextPiece(), selector);
-  }, config.login_url, selector, credentials);
+// START POINT
+fs.readFile('config.json', 'utf8', function(error, data) {
+  if (error) { return console.log(error); }
+  config = JSON.parse(data);
 
-}, config.series_url, selector);
+
+  getPieces(function(pieces_data) {
+    pieces = pieces_data;
+
+    signin(function() {
+      crawl(save, nextPiece(), selector);
+    }, config.login_url, selector, credentials);
+
+  }, config.base_url + config.series_name, selector);
+
+})

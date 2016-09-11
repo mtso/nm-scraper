@@ -1,0 +1,6 @@
+{
+  "series_name": "lithium-flowers",
+  "base_url": "https://www.neonmob.com/series/",
+  "login_url": "https://www.neonmob.com/login",
+  "save_path": "."
+}
