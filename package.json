@@ -1,0 +1,17 @@
+{
+  "name": "neonmob-crawler",
+  "version": "1.0.0",
+  "description": "Gets the raw data of a series",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "mtso",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mkdirp": "^0.5.1",
+    "nightmare": "^2.7.0"
+  }
+}
