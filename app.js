@@ -1,8 +1,13 @@
+
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const Nightmare = require('nightmare');
 
 var nightmare = Nightmare();
+
+var pieces;
+var config;
+var series_name;
 
 
 var credentials;
@@ -34,8 +39,8 @@ const selector = {
 function getPieces(callback, url, selector) {
   (new Nightmare())
     .goto(url)
-    .wait(selector.show_specials)
-    .click(selector.show_specials)
+    .wait(selector.show_specials)     // !! Must have chase/variants
+    .click(selector.show_specials)    // !! Must have chase/variants
     .evaluate(function(selector) {
 
       const sectionSelector = 'section.set-checklist--rarity-group';
@@ -45,7 +50,7 @@ function getPieces(callback, url, selector) {
         'rare',
         'veryRare',
         'extremelyRare',
-        'chase'
+        'chase'                       // !! Must have chase/variants
       ];
 
       var pieces = [];
@@ -107,7 +112,7 @@ function crawl(callback, piece, selector) {
     .click(selector.owners_btn)
     .evaluate(function(rarity) {
 
-      var loadingTolerance = 5000;
+      var loadingTolerance = 20000;
       var timeSinceLastScroll = 0;
       var previousScrollTop = 0;
       var previousUpdateTime = 0;
@@ -154,9 +159,9 @@ function crawl(callback, piece, selector) {
 
 
 function save(data) {
-  var series_url = config.base_url + config.series_name;
+  var series_url = config.base_url + series_name;
   var pieceName = data.url.replace(series_url, '').replace('/', '').replace('/', '');
-  var dir = config.save_path + '/' + config.series_name + '.nmdata/' + data.rarity;
+  var dir = config.save_path + '/' + series_name + '.nmdata/' + data.rarity;
   var filename = pieceName + '.txt';
   var textToSave = 'Accessed on ' + data.timestamp + '\n' + data.text;
 
@@ -187,15 +192,14 @@ function beginCrawl() {
 }
 
 
-var pieces;
-var config;
-
 // START POINT
 fs.readFile('config.json', 'utf8', function(error, data) {
   if (error) { return console.log(error); }
   config = JSON.parse(data);
 
+  series_name = (process.argv[2]) ? process.argv[2] : config.series_name;
 
+  // FIRST NIGHTMARE INIT
   getPieces(function(pieces_data) {
     pieces = pieces_data;
 
@@ -203,6 +207,6 @@ fs.readFile('config.json', 'utf8', function(error, data) {
       crawl(save, nextPiece(), selector);
     }, config.login_url, selector, credentials);
 
-  }, config.base_url + config.series_name, selector);
+  }, config.base_url + series_name, selector);
 
 })
