@@ -2,5 +2,5 @@
   "series_name": "sunflow-unlimited",
   "base_url": "https://www.neonmob.com/series/",
   "login_url": "https://www.neonmob.com/login",
-  "save_path": "/Users/matthewtso/git/neonmob-datasets/temp"
+  "save_path": "./"
 }
